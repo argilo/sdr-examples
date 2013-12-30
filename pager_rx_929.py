@@ -1,0 +1,217 @@
+#!/usr/bin/env python
+##################################################
+# Gnuradio Python Flow Graph
+# Title: Pager Rx
+# Generated: Sun Dec 29 11:31:31 2013
+##################################################
+
+from gnuradio import eng_notation
+from gnuradio import filter
+from gnuradio import gr
+from gnuradio import wxgui
+from gnuradio import pager
+from gnuradio import blocks
+from gnuradio.eng_option import eng_option
+from gnuradio.fft import window
+from gnuradio.filter import firdes
+from gnuradio.wxgui import forms
+from gnuradio.wxgui import waterfallsink2
+from grc_gnuradio import wxgui as grc_wxgui
+from optparse import OptionParser
+import osmosdr
+import wx
+
+class pager_rx(grc_wxgui.top_block_gui):
+
+    def __init__(self, options, queue):
+        grc_wxgui.top_block_gui.__init__(self, title="Pager Rx")
+        _icon_path = "/usr/share/icons/hicolor/32x32/apps/gnuradio-grc.png"
+        self.SetIcon(wx.Icon(_icon_path, wx.BITMAP_TYPE_ANY))
+
+        ##################################################
+        # Variables
+        ##################################################
+        self.band = band = 929.5e6
+        self.frequencies = [929.1875e6, 929.2875e6, 929.6625e6]
+        self.samp_rate = samp_rate = 1200000
+        self.corr = corr = 0
+        self.channel_rate = channel_rate = 25000
+
+        ##################################################
+        # Blocks
+        ##################################################
+        _corr_sizer = wx.BoxSizer(wx.VERTICAL)
+        self._corr_text_box = forms.text_box(
+        	parent=self.GetWin(),
+        	sizer=_corr_sizer,
+        	value=self.corr,
+        	callback=self.set_corr,
+        	label="Frequency correction",
+        	converter=forms.float_converter(),
+        	proportion=0,
+        )
+        self._corr_slider = forms.slider(
+        	parent=self.GetWin(),
+        	sizer=_corr_sizer,
+        	value=self.corr,
+        	callback=self.set_corr,
+        	minimum=-150,
+        	maximum=150,
+        	num_steps=300,
+        	style=wx.SL_HORIZONTAL,
+        	cast=float,
+        	proportion=1,
+        )
+        self.GridAdd(_corr_sizer, 0, 0, 1, 1)
+        self.wxgui_waterfallsink2_1 = waterfallsink2.waterfall_sink_c(
+        	self.GetWin(),
+        	baseband_freq=0,
+        	dynamic_range=50,
+        	ref_level=-20,
+        	ref_scale=2.0,
+        	sample_rate=channel_rate,
+        	fft_size=512,
+        	fft_rate=15,
+        	average=False,
+        	avg_alpha=None,
+        	title="Channel Waterfall",
+        )
+        self.Add(self.wxgui_waterfallsink2_1.win)
+        self.wxgui_waterfallsink2_0 = waterfallsink2.waterfall_sink_c(
+        	self.GetWin(),
+        	baseband_freq=band,
+        	dynamic_range=50,
+        	ref_level=-20,
+        	ref_scale=2.0,
+        	sample_rate=samp_rate,
+        	fft_size=1024,
+        	fft_rate=15,
+        	average=False,
+        	avg_alpha=None,
+        	title="Band Waterfall",
+        )
+        self.GridAdd(self.wxgui_waterfallsink2_0.win, 1, 0, 1, 1)
+        def wxgui_waterfallsink2_0_callback(x, y):
+        	self.set_click_freq(x)
+        self.add = blocks.add_vcc(1)
+        
+        self.wxgui_waterfallsink2_0.set_callback(wxgui_waterfallsink2_0_callback)
+        self.osmosdr_source_0 = osmosdr.source( args="numchan=" + str(1) + " " + "" )
+        self.osmosdr_source_0.set_sample_rate(samp_rate)
+        self.osmosdr_source_0.set_center_freq(band, 0)
+        self.osmosdr_source_0.set_freq_corr(corr, 0)
+        self.osmosdr_source_0.set_dc_offset_mode(0, 0)
+        self.osmosdr_source_0.set_iq_balance_mode(0, 0)
+        self.osmosdr_source_0.set_gain_mode(0, 0)
+        self.osmosdr_source_0.set_gain(40, 0)
+        self.osmosdr_source_0.set_if_gain(20, 0)
+        self.osmosdr_source_0.set_bb_gain(20, 0)
+        self.osmosdr_source_0.set_antenna("", 0)
+        self.osmosdr_source_0.set_bandwidth(0, 0)
+          
+        self.channel_filter = []
+        self.flex = []
+
+        for x in range(len(self.frequencies)):
+            frequency = self.frequencies[x]
+            self.channel_filter.append(filter.freq_xlating_fir_filter_ccc(samp_rate / channel_rate, (filter.optfir.low_pass(1.0, samp_rate, 11000, 12500, 0.1, 60)), frequency - band, samp_rate))
+
+            # FLEX protocol demodulator
+            self.flex.append(pager.flex_demod(queue, frequency, False, False)) # options.verbose, options.log
+
+            self.connect((self.osmosdr_source_0, 0), (self.channel_filter[x], 0))
+            self.connect((self.channel_filter[x], 0), (self.add, x))
+            self.connect((self.channel_filter[x], 0), (self.flex[x], 0))
+
+        ##################################################
+        # Connections
+        ##################################################
+        self.connect((self.osmosdr_source_0, 0), (self.wxgui_waterfallsink2_0, 0))
+        self.connect((self.add, 0), (self.wxgui_waterfallsink2_1, 0))
+
+
+# QT sink close method reimplementation
+
+    def get_band(self):
+        return self.band
+
+    def set_band(self, band):
+        self.band = band
+        self.set_click_freq(self.band - 500000 + 12500)
+        self._band_chooser.set_value(self.band)
+        self.set_freq(self.band - 512500 + (self.channel * 25000))
+        self.set_channel(round((self.click_freq - (self.band - 500000 - 12500)) / 25000))
+        self.wxgui_waterfallsink2_0.set_baseband_freq(self.band)
+        self.osmosdr_source_0.set_center_freq(self.band, 0)
+        self.freq_xlating_fir_filter_xxx_0.set_center_freq(self.freq - self.band)
+
+    def get_click_freq(self):
+        return self.click_freq
+
+    def set_click_freq(self, click_freq):
+        self.click_freq = click_freq
+        self.set_channel(round((self.click_freq - (self.band - 500000 - 12500)) / 25000))
+
+    def get_channel(self):
+        return self.channel
+
+    def set_channel(self, channel):
+        self.channel = channel
+        self.set_freq(self.band - 512500 + (self.channel * 25000))
+        self._channel_slider.set_value(self.channel)
+        self._channel_text_box.set_value(self.channel)
+
+    def get_samp_rate(self):
+        return self.samp_rate
+
+    def set_samp_rate(self, samp_rate):
+        self.samp_rate = samp_rate
+        self.wxgui_waterfallsink2_0.set_sample_rate(self.samp_rate)
+        self.osmosdr_source_0.set_sample_rate(self.samp_rate)
+        self.freq_xlating_fir_filter_xxx_0.set_taps((filter.optfir.low_pass(1.0, self.samp_rate, 11000, 12500, 0.1, 60)))
+
+    def get_freq(self):
+        return self.freq
+
+    def set_freq(self, freq):
+        self.freq = freq
+        self._freq_static_text.set_value(self.freq)
+        self.freq_xlating_fir_filter_xxx_0.set_center_freq(self.freq - self.band)
+
+    def get_corr(self):
+        return self.corr
+
+    def set_corr(self, corr):
+        self.corr = corr
+        self._corr_slider.set_value(self.corr)
+        self._corr_text_box.set_value(self.corr)
+        self.osmosdr_source_0.set_freq_corr(self.corr, 0)
+
+    def get_channel_rate(self):
+        return self.channel_rate
+
+    def set_channel_rate(self, channel_rate):
+        self.channel_rate = channel_rate
+        self.wxgui_waterfallsink2_1.set_sample_rate(self.channel_rate)
+
+if __name__ == '__main__':
+    import ctypes
+    import os
+    if os.name == 'posix':
+        try:
+            x11 = ctypes.cdll.LoadLibrary('libX11.so')
+            x11.XInitThreads()
+        except:
+            print "Warning: failed to XInitThreads()"
+    parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
+    (options, args) = parser.parse_args()
+
+    # Flow graph emits pages into message queue
+    queue = gr.msg_queue()
+    tb = pager_rx(options, queue)
+    runner = pager.queue_runner(queue)
+
+    #tb = pager_rx()
+    tb.Start(True)
+    tb.Wait()
+
