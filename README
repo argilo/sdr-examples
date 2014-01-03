@@ -73,6 +73,6 @@ This example demonstrates reception of multiple FLEX channels
 simultaneously.  It tunes three Ottawa-area FLEX transmitters at
 929.1875, 929.2875 and 929.6625 MHz.  As with the previous example,
 for correct decoding the frequency correction slider must be set
-correctly so that the signals appear in the center of the channel
-waterfall.  The gain slider should be set as high as possible without
-causing spurious signals to appear.
+so that the signals appear in the center of the channel waterfall.
+The gain slider should be set as high as possible without causing
+spurious signals to appear.
