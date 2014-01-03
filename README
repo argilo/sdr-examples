@@ -25,3 +25,54 @@ Email: <argilo@gmail.com>
 
 This project is a collection of GNU Radio examples created for a
 tutorial session given at the Ottawa Amateur Radio Club.
+
+
+multi_tx.grc & multi_tx.py
+--------------------------
+
+This example transmits the following signals simultaneously:
+
+1. Narrowband FM at 440.9 MHz
+2. Wideband FM at 441.0 MHz
+3. AM at 441.120 MHz
+4. LSB at 441.131 MHz
+5. USB at 441.134 MHz
+6. CW at 441.140 MHz
+
+It is built for the BladeRF, but it should easily be adaptable to other
+boards such as the USRP B200/210 or HackRF.
+
+Output power is split approximately equally between the six signals,
+with the gain set such that no clipping occurs.
+
+
+pager_rx.py
+-----------
+
+This example allows the reception of the FLEX protocol used to send
+messages to pagers.  It is intended for use with a RTL-SDR dongle
+such as the NooElec TV28T.
+
+To use it, first set the frequency correction slider to the correct
+value to match your dongle's crystal.  The gain slider should be set to
+the highest value which does not cause clipping.  (If it's too high,
+you'll see spurious signals appearing.)
+
+Choose a band (929-930 MHz or 931-932 MHz) by clicking the appropriate
+radio button.  The band waterfall will display all signals in that
+band.  Click on a signal to tune to its channel.  When transmitting,
+you should see the channel's signal in the channel waterfall display.
+When the frequency correction slider is set correctly, the signal
+should be centered in the channel waterfall display.
+
+
+pager_rx_929.py
+---------------
+
+This example demonstrates reception of multiple FLEX channels
+simultaneously.  It tunes three Ottawa-area FLEX transmitters at
+929.1875, 929.2875 and 929.6625 MHz.  As with the previous example,
+for correct decoding the frequency correction slider must be set
+correctly so that the signals appear in the center of the channel
+waterfall.  The gain slider should be set as high as possible without
+causing spurious signals to appear.
