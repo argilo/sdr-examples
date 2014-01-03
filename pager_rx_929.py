@@ -35,6 +35,7 @@ class pager_rx(grc_wxgui.top_block_gui):
         self.frequencies = [929.1875e6, 929.2875e6, 929.6625e6]
         self.samp_rate = samp_rate = 1200000
         self.corr = corr = 0
+        self.gain = gain = 40.0
         self.channel_rate = channel_rate = 25000
 
         ##################################################
@@ -62,7 +63,30 @@ class pager_rx(grc_wxgui.top_block_gui):
         	cast=float,
         	proportion=1,
         )
-        self.GridAdd(_corr_sizer, 0, 0, 1, 1)
+        self.GridAdd(_corr_sizer, 0, 1, 1, 1)
+        _gain_sizer = wx.BoxSizer(wx.VERTICAL)
+        self._gain_text_box = forms.text_box(
+        	parent=self.GetWin(),
+        	sizer=_gain_sizer,
+        	value=self.gain,
+        	callback=self.set_gain,
+        	label="Gain",
+        	converter=forms.float_converter(),
+        	proportion=0,
+        )
+        self._gain_slider = forms.slider(
+        	parent=self.GetWin(),
+        	sizer=_gain_sizer,
+        	value=self.gain,
+        	callback=self.set_gain,
+        	minimum=0,
+        	maximum=49.6,
+        	num_steps=124,
+        	style=wx.SL_HORIZONTAL,
+        	cast=float,
+        	proportion=1,
+        )
+        self.GridAdd(_gain_sizer, 0, 0, 1, 1)
         self.wxgui_waterfallsink2_1 = waterfallsink2.waterfall_sink_c(
         	self.GetWin(),
         	baseband_freq=0,
@@ -90,7 +114,7 @@ class pager_rx(grc_wxgui.top_block_gui):
         	avg_alpha=None,
         	title="Band Waterfall",
         )
-        self.GridAdd(self.wxgui_waterfallsink2_0.win, 1, 0, 1, 1)
+        self.GridAdd(self.wxgui_waterfallsink2_0.win, 1, 0, 1, 2)
         def wxgui_waterfallsink2_0_callback(x, y):
         	self.set_click_freq(x)
         self.add = blocks.add_vcc(1)
@@ -103,7 +127,7 @@ class pager_rx(grc_wxgui.top_block_gui):
         self.osmosdr_source_0.set_dc_offset_mode(0, 0)
         self.osmosdr_source_0.set_iq_balance_mode(0, 0)
         self.osmosdr_source_0.set_gain_mode(0, 0)
-        self.osmosdr_source_0.set_gain(40, 0)
+        self.osmosdr_source_0.set_gain(gain, 0)
         self.osmosdr_source_0.set_if_gain(20, 0)
         self.osmosdr_source_0.set_bb_gain(20, 0)
         self.osmosdr_source_0.set_antenna("", 0)
@@ -186,6 +210,15 @@ class pager_rx(grc_wxgui.top_block_gui):
         self._corr_slider.set_value(self.corr)
         self._corr_text_box.set_value(self.corr)
         self.osmosdr_source_0.set_freq_corr(self.corr, 0)
+
+    def get_gain(self):
+        return self.gain
+
+    def set_gain(self, gain):
+        self.gain = gain
+        self._gain_slider.set_value(self.gain)
+        self._gain_text_box.set_value(self.gain)
+        self.osmosdr_source_0.set_gain(self.gain, 0)
 
     def get_channel_rate(self):
         return self.channel_rate
