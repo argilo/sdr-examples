@@ -38,6 +38,7 @@ This example transmits the following signals simultaneously:
 4. LSB at 441.131 MHz
 5. USB at 441.134 MHz
 6. CW at 441.140 MHz
+7. PSK31 at 441.142 MHz
 
 It is built for the BladeRF, but it should easily be adaptable to other
 boards such as the USRP B200/210 or HackRF.

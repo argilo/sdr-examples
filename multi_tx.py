@@ -2,11 +2,12 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Multi Tx
-# Generated: Mon Dec 30 12:53:32 2013
+# Generated: Sat Jan  4 22:10:18 2014
 ##################################################
 
 from gnuradio import analog
 from gnuradio import blocks
+from gnuradio import digital
 from gnuradio import eng_notation
 from gnuradio import filter
 from gnuradio import gr
@@ -90,6 +91,12 @@ class multi_tx(grc_wxgui.top_block_gui):
         	1, audio_rate, 5, 0.35, 200))
         self.root_raised_cosine_filter_0 = filter.fir_filter_ccf(1, firdes.root_raised_cosine(
         	1, audio_rate, 5, 0.35, 200))
+        self.rational_resampler_xxx_3 = filter.rational_resampler_ccc(
+                interpolation=192,
+                decimation=1,
+                taps=None,
+                fractional_bw=None,
+        )
         self.rational_resampler_xxx_2 = filter.rational_resampler_ccc(
                 interpolation=samp_rate,
                 decimation=audio_rate,
@@ -121,9 +128,21 @@ class multi_tx(grc_wxgui.top_block_gui):
         self.low_pass_filter_1 = filter.interp_fir_filter_ccf(1, firdes.low_pass(
         	0.5, audio_rate, 5000, 400, firdes.WIN_HAMMING, 6.76))
         self.iqbalance_fix_cc_0 = iqbalance.fix_cc(magnitude, phase)
+        self.digital_psk_mod_0 = digital.psk.psk_mod(
+          constellation_points=2,
+          mod_code="none",
+          differential=True,
+          samples_per_symbol=8,
+          excess_bw=0.35,
+          verbose=False,
+          log=False,
+          )
         self.blocks_wavfile_source_0 = blocks.wavfile_source("multi_tx.wav", True)
+        self.blocks_vector_source_x_2 = blocks.vector_source_b((1,1, 0,0,1,0,0,1,0, 1,1, 0,1,0,1,0,0, 1,1, 0,0,1,0, 1,1, 0,1,0,0,0, 1,1, 0, 1,1, 0,0,1,0, 1,1, 0,1,0,0,0, 1,1, 0, 1,1, 0,0,1,0,0,1,0,1,0, 1,1, 0,0,0,1,0,0,0, 1,1, 0,0,0,0,0,0,0,0, 1,1, 0,0,0,0,0,0,0, 1,1, 0,1,0,1,0,0,0,0, 1,1, 0,1,0,1,0,0,0,0, 1,1, 0, 1,1, 0,1,0, 1,1, 0,0, 1,1, 0,1,0,0,0, 1,1, 0,1,0, 1,1, 0,0,1,0, 1,1, 0,0,0,0, 1,1, 0,1,0,0,1,0,0, 1,1, 0,1,0,1,0,0,0, 1,1, 0,0,0,1,0), True, 1, [])
         self.blocks_vector_source_x_0 = blocks.vector_source_c((1,0,1,0,1,0,1,1,1,0,0,0,1,0,1,0,1,0,1,1,1,0,0,0,1,0,1,0,1,0,1,1,1,0,0,0,0,0,0,0,1,1,1,0,1,0,1,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0,1,0,1,1,1,0,0,0,1,0,0,0,1,0,1,0,1,0,1,1,1,0,1,1,1,0,0,0,1,0,1,0,0,0,1,0,1,1,1,0,1,0,0,0,1,0,1,1,1,0,1,0,0,0,0,0,0,0,1,1,1,0,0,0,1,0,0,0,1,0,1,0,1,0,0,0,1,1,1,0,0,0,1,0,1,0,0,0,1,1,1,0,1,0,0,0,1,1,1,0,1,1,1,0,1,0,0,0,0,0,0,0), True, 1, [])
+        self.blocks_unpacked_to_packed_xx_0 = blocks.unpacked_to_packed_bb(1, gr.GR_MSB_FIRST)
         self.blocks_repeat_0 = blocks.repeat(gr.sizeof_gr_complex*1, int(1.2 * audio_rate / wpm))
+        self.blocks_multiply_xx_6 = blocks.multiply_vcc(1)
         self.blocks_multiply_xx_5 = blocks.multiply_vcc(1)
         self.blocks_multiply_xx_4 = blocks.multiply_vcc(1)
         self.blocks_multiply_xx_3_0 = blocks.multiply_vcc(1)
@@ -145,13 +164,14 @@ class multi_tx(grc_wxgui.top_block_gui):
         	tau=75e-6,
         	max_dev=75e3,
         )
+        self.analog_sig_source_x_6 = analog.sig_source_c(audio_rate, analog.GR_COS_WAVE, 22000, 1, 0)
         self.analog_sig_source_x_5 = analog.sig_source_c(audio_rate, analog.GR_COS_WAVE, 20000, 1, 0)
-        self.analog_sig_source_x_4 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, 120000, 1.0 / 6, 0)
+        self.analog_sig_source_x_4 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, 120000, 1.0 / 7, 0)
         self.analog_sig_source_x_3_0 = analog.sig_source_c(audio_rate, analog.GR_COS_WAVE, 11000, 1.8, 0)
         self.analog_sig_source_x_3 = analog.sig_source_c(audio_rate, analog.GR_COS_WAVE, 14000, 1.8, 0)
         self.analog_sig_source_x_2 = analog.sig_source_c(audio_rate, analog.GR_COS_WAVE, 0, 1, 0)
-        self.analog_sig_source_x_1 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, 0, 1.0 / 6, 0)
-        self.analog_sig_source_x_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, -100000, 1.0 / 6, 0)
+        self.analog_sig_source_x_1 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, 0, 1.0 / 7, 0)
+        self.analog_sig_source_x_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, -100000, 1.0 / 7, 0)
         self.analog_nbfm_tx_0 = analog.nbfm_tx(
         	audio_rate=audio_rate,
         	quad_rate=audio_rate * 2,
@@ -200,6 +220,12 @@ class multi_tx(grc_wxgui.top_block_gui):
         self.connect((self.root_raised_cosine_filter_1, 0), (self.root_raised_cosine_filter_0, 0))
         self.connect((self.blocks_repeat_0, 0), (self.root_raised_cosine_filter_1, 0))
         self.connect((self.blocks_vector_source_x_0, 0), (self.blocks_repeat_0, 0))
+        self.connect((self.analog_sig_source_x_6, 0), (self.blocks_multiply_xx_6, 1))
+        self.connect((self.blocks_multiply_xx_6, 0), (self.blocks_add_xx_1, 4))
+        self.connect((self.rational_resampler_xxx_3, 0), (self.blocks_multiply_xx_6, 0))
+        self.connect((self.blocks_vector_source_x_2, 0), (self.blocks_unpacked_to_packed_xx_0, 0))
+        self.connect((self.blocks_unpacked_to_packed_xx_0, 0), (self.digital_psk_mod_0, 0))
+        self.connect((self.digital_psk_mod_0, 0), (self.rational_resampler_xxx_3, 0))
 
 
 # QT sink close method reimplementation
@@ -219,6 +245,7 @@ class multi_tx(grc_wxgui.top_block_gui):
         self.analog_sig_source_x_5.set_sampling_freq(self.audio_rate)
         self.analog_sig_source_x_3.set_sampling_freq(self.audio_rate)
         self.analog_sig_source_x_3_0.set_sampling_freq(self.audio_rate)
+        self.analog_sig_source_x_6.set_sampling_freq(self.audio_rate)
 
     def get_wpm(self):
         return self.wpm
@@ -231,10 +258,10 @@ class multi_tx(grc_wxgui.top_block_gui):
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
+        self.osmosdr_sink_0.set_sample_rate(self.samp_rate)
         self.analog_sig_source_x_1.set_sampling_freq(self.samp_rate)
         self.analog_sig_source_x_0.set_sampling_freq(self.samp_rate)
         self.analog_sig_source_x_4.set_sampling_freq(self.samp_rate)
-        self.osmosdr_sink_0.set_sample_rate(self.samp_rate)
 
     def get_phase(self):
         return self.phase
