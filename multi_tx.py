@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Multi Tx
-# Generated: Sat Jan  4 22:10:18 2014
+# Generated: Sun Jan  5 11:26:54 2014
 ##################################################
 
 from gnuradio import analog
@@ -137,9 +137,10 @@ class multi_tx(grc_wxgui.top_block_gui):
           verbose=False,
           log=False,
           )
+        self.digital_map_bb_0 = digital.map_bb(([1,0]))
         self.blocks_wavfile_source_0 = blocks.wavfile_source("multi_tx.wav", True)
-        self.blocks_vector_source_x_2 = blocks.vector_source_b((1,1, 0,0,1,0,0,1,0, 1,1, 0,1,0,1,0,0, 1,1, 0,0,1,0, 1,1, 0,1,0,0,0, 1,1, 0, 1,1, 0,0,1,0, 1,1, 0,1,0,0,0, 1,1, 0, 1,1, 0,0,1,0,0,1,0,1,0, 1,1, 0,0,0,1,0,0,0, 1,1, 0,0,0,0,0,0,0,0, 1,1, 0,0,0,0,0,0,0, 1,1, 0,1,0,1,0,0,0,0, 1,1, 0,1,0,1,0,0,0,0, 1,1, 0, 1,1, 0,1,0, 1,1, 0,0, 1,1, 0,1,0,0,0, 1,1, 0,1,0, 1,1, 0,0,1,0, 1,1, 0,0,0,0, 1,1, 0,1,0,0,1,0,0, 1,1, 0,1,0,1,0,0,0, 1,1, 0,0,0,1,0), True, 1, [])
-        self.blocks_vector_source_x_0 = blocks.vector_source_c((1,0,1,0,1,0,1,1,1,0,0,0,1,0,1,0,1,0,1,1,1,0,0,0,1,0,1,0,1,0,1,1,1,0,0,0,0,0,0,0,1,1,1,0,1,0,1,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0,1,0,1,1,1,0,0,0,1,0,0,0,1,0,1,0,1,0,1,1,1,0,1,1,1,0,0,0,1,0,1,0,0,0,1,0,1,1,1,0,1,0,0,0,1,0,1,1,1,0,1,0,0,0,0,0,0,0,1,1,1,0,0,0,1,0,0,0,1,0,1,0,1,0,0,0,1,1,1,0,0,0,1,0,1,0,0,0,1,1,1,0,1,0,0,0,1,1,1,0,1,1,1,0,1,0,0,0,0,0,0,0), True, 1, [])
+        self.blocks_vector_source_x_2 = blocks.vector_source_b((0,0, 1,1,0,1,1,0,1, 0,0, 1,0,1,0,1,1, 0,0, 1,1,0,1, 0,0, 1,0,1,1,1, 0,0, 1, 0,0, 1,1,0,1, 0,0, 1,0,1,1,1, 0,0, 1, 0,0, 1,1,0,1,1,0,1,0,1, 0,0, 1,1,1,0,1,1,1, 0,0, 1,1,1,1,1,1,1,1, 0,0, 1,1,1,1,1,1,1, 0,0, 1,0,1,0,1,1,1,1, 0,0, 1,0,1,0,1,1,1,1, 0,0, 1, 0,0, 1,0,1, 0,0, 1,1, 0,0, 1,0,1,1,1, 0,0, 1,0,1, 0,0, 1,1,0,1, 0,0, 1,1,1,1, 0,0, 1,0,1,1,0,1,1, 0,0, 1,0,1,0,1,1,1, 0,0, 1,1,1,0,1), True, 1, [])
+        self.blocks_vector_source_x_0 = blocks.vector_source_c((1,0,1,0,1,0,1,1,1, 0,0,0, 1,0,1,0,1,0,1,1,1, 0,0,0, 1,0,1,0,1,0,1,1,1, 0,0,0,0,0,0,0, 1,1,1,0,1,0,1, 0,0,0, 1, 0,0,0,0,0,0,0, 1,0,1,0,1,0,1,1,1, 0,0,0, 1, 0,0,0, 1,0,1,0,1,0,1,1,1,0,1,1,1, 0,0,0, 1,0,1, 0,0,0, 1,0,1,1,1,0,1, 0,0,0, 1,0,1,1,1,0,1, 0,0,0,0,0,0,0, 1,1,1, 0,0,0, 1, 0,0,0, 1,0,1,0,1, 0,0,0, 1,1,1, 0,0,0, 1,0,1, 0,0,0, 1,1,1,0,1, 0,0,0, 1,1,1,0,1,1,1,0,1, 0,0,0,0,0,0,0), True, 1, [])
         self.blocks_unpacked_to_packed_xx_0 = blocks.unpacked_to_packed_bb(1, gr.GR_MSB_FIRST)
         self.blocks_repeat_0 = blocks.repeat(gr.sizeof_gr_complex*1, int(1.2 * audio_rate / wpm))
         self.blocks_multiply_xx_6 = blocks.multiply_vcc(1)
@@ -217,15 +218,16 @@ class multi_tx(grc_wxgui.top_block_gui):
         self.connect((self.blocks_multiply_xx_5, 0), (self.blocks_add_xx_1, 3))
         self.connect((self.analog_sig_source_x_5, 0), (self.blocks_multiply_xx_5, 1))
         self.connect((self.root_raised_cosine_filter_0, 0), (self.blocks_multiply_xx_5, 0))
-        self.connect((self.root_raised_cosine_filter_1, 0), (self.root_raised_cosine_filter_0, 0))
-        self.connect((self.blocks_repeat_0, 0), (self.root_raised_cosine_filter_1, 0))
-        self.connect((self.blocks_vector_source_x_0, 0), (self.blocks_repeat_0, 0))
         self.connect((self.analog_sig_source_x_6, 0), (self.blocks_multiply_xx_6, 1))
         self.connect((self.blocks_multiply_xx_6, 0), (self.blocks_add_xx_1, 4))
         self.connect((self.rational_resampler_xxx_3, 0), (self.blocks_multiply_xx_6, 0))
-        self.connect((self.blocks_vector_source_x_2, 0), (self.blocks_unpacked_to_packed_xx_0, 0))
         self.connect((self.blocks_unpacked_to_packed_xx_0, 0), (self.digital_psk_mod_0, 0))
         self.connect((self.digital_psk_mod_0, 0), (self.rational_resampler_xxx_3, 0))
+        self.connect((self.blocks_vector_source_x_2, 0), (self.digital_map_bb_0, 0))
+        self.connect((self.digital_map_bb_0, 0), (self.blocks_unpacked_to_packed_xx_0, 0))
+        self.connect((self.blocks_vector_source_x_0, 0), (self.blocks_repeat_0, 0))
+        self.connect((self.blocks_repeat_0, 0), (self.root_raised_cosine_filter_1, 0))
+        self.connect((self.root_raised_cosine_filter_1, 0), (self.root_raised_cosine_filter_0, 0))
 
 
 # QT sink close method reimplementation
@@ -240,12 +242,12 @@ class multi_tx(grc_wxgui.top_block_gui):
         self.band_pass_filter_0.set_taps(firdes.complex_band_pass(1, self.audio_rate, 200, 2800, 200, firdes.WIN_HAMMING, 6.76))
         self.low_pass_filter_1.set_taps(firdes.low_pass(0.5, self.audio_rate, 5000, 400, firdes.WIN_HAMMING, 6.76))
         self.analog_sig_source_x_2.set_sampling_freq(self.audio_rate)
-        self.root_raised_cosine_filter_1.set_taps(firdes.root_raised_cosine(1, self.audio_rate, 5, 0.35, 200))
-        self.root_raised_cosine_filter_0.set_taps(firdes.root_raised_cosine(1, self.audio_rate, 5, 0.35, 200))
         self.analog_sig_source_x_5.set_sampling_freq(self.audio_rate)
         self.analog_sig_source_x_3.set_sampling_freq(self.audio_rate)
         self.analog_sig_source_x_3_0.set_sampling_freq(self.audio_rate)
         self.analog_sig_source_x_6.set_sampling_freq(self.audio_rate)
+        self.root_raised_cosine_filter_1.set_taps(firdes.root_raised_cosine(1, self.audio_rate, 5, 0.35, 200))
+        self.root_raised_cosine_filter_0.set_taps(firdes.root_raised_cosine(1, self.audio_rate, 5, 0.35, 200))
 
     def get_wpm(self):
         return self.wpm
