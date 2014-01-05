@@ -77,3 +77,21 @@ for correct decoding the frequency correction slider must be set
 so that the signals appear in the center of the channel waterfall.
 The gain slider should be set as high as possible without causing
 spurious signals to appear.
+
+
+va3rft.grc & va3rft.py
+----------------------
+
+This example receives an Ottawa-area DMR digital voice repeater,
+VA3RFT on 444.475 MHz.  It is intended for use with an RTL-SDR dongle
+such as the NooElec TV28T.  It depends on my GNU Radio DSD block,
+which can be downloaded at https://github.com/argilo/gr-dsd.
+
+To use it, set the frequency correction slider to the correct value
+to match your dongle's crystal.  If necessary, set the gain slider to
+an appropriate value to prevent clipping.
+
+If the frequency correction slider is set correctly, you should see
+transmissions appearing in the center of the band in the middle of
+the waterfall.  Even when nobody is using the repeater, it transmits
+some packets about once every 80 seconds.
