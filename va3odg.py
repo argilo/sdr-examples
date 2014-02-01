@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: VA3ODG
-# Generated: Sat Feb  1 10:04:32 2014
+# Generated: Sat Feb  1 10:18:36 2014
 ##################################################
 
 from gnuradio import analog
@@ -39,7 +39,7 @@ class va3odg(grc_wxgui.top_block_gui):
         self.offset = offset = 50000
         self.gain = gain = 40
         self.fsk_deviation_hz = fsk_deviation_hz = 8000
-        self.freq = freq = 444475000
+        self.freq = freq = 444850000
         self.corr = corr = 0
 
         ##################################################
