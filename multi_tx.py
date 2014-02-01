@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Multi Tx
-# Generated: Fri Jan 24 22:49:01 2014
+# Generated: Sat Jan 25 09:16:53 2014
 ##################################################
 
 from gnuradio import analog
@@ -35,13 +35,13 @@ class multi_tx(grc_wxgui.top_block_gui):
         self.wbfm_on = wbfm_on = True
         self.usb_on = usb_on = True
         self.samp_rate = samp_rate = audio_rate * 40
-        self.q_offset = q_offset = 0
+        self.q_offset = q_offset = 0.005
         self.psk_on = psk_on = True
-        self.phase = phase = 0
+        self.phase = phase = 0.015
         self.nbfm_on = nbfm_on = True
-        self.magnitude = magnitude = 0
+        self.magnitude = magnitude = 0.035
         self.lsb_on = lsb_on = True
-        self.i_offset = i_offset = 0
+        self.i_offset = i_offset = 0.01
         self.gain = gain = 25
         self.cw_on = cw_on = True
         self.center_freq = center_freq = 441000000
@@ -256,7 +256,7 @@ class multi_tx(grc_wxgui.top_block_gui):
           log=False,
           )
         self.digital_map_bb_0 = digital.map_bb(([1,0]))
-        self.blocks_wavfile_source_0 = blocks.wavfile_source("multi_tx.wav", True)
+        self.blocks_wavfile_source_0 = blocks.wavfile_source("/home/argilo/git/sdr-examples/multi_tx.wav", True)
         self.blocks_vector_source_x_2 = blocks.vector_source_b((0,0, 1,1,0,1,1,0,1, 0,0, 1,0,1,0,1,1, 0,0, 1,1,0,1, 0,0, 1,0,1,1,1, 0,0, 1, 0,0, 1,1,0,1, 0,0, 1,0,1,1,1, 0,0, 1, 0,0, 1,1,0,1,1,0,1,0,1, 0,0, 1,1,1,0,1,1,1, 0,0, 1,1,1,1,1,1,1,1, 0,0, 1,1,1,1,1,1,1, 0,0, 1,0,1,0,1,1,1,1, 0,0, 1,0,1,0,1,1,1,1, 0,0, 1, 0,0, 1,0,1, 0,0, 1,1, 0,0, 1,0,1,1,1, 0,0, 1,0,1, 0,0, 1,1,0,1, 0,0, 1,1,1,1, 0,0, 1,0,1,1,0,1,1, 0,0, 1,0,1,0,1,1,1, 0,0, 1,1,1,0,1), True, 1, [])
         self.blocks_vector_source_x_0 = blocks.vector_source_c((1,0,1,0,1,0,1,1,1, 0,0,0, 1,0,1,0,1,0,1,1,1, 0,0,0, 1,0,1,0,1,0,1,1,1, 0,0,0,0,0,0,0, 1,1,1,0,1,0,1, 0,0,0, 1, 0,0,0,0,0,0,0, 1,0,1,0,1,0,1,1,1, 0,0,0, 1, 0,0,0, 1,0,1,0,1,0,1,1,1,0,1,1,1, 0,0,0, 1,0,1, 0,0,0, 1,0,1,1,1,0,1, 0,0,0, 1,0,1,1,1,0,1, 0,0,0,0,0,0,0, 1,1,1, 0,0,0, 1, 0,0,0, 1,0,1,0,1, 0,0,0, 1,1,1, 0,0,0, 1,0,1, 0,0,0, 1,1,1,0,1, 0,0,0, 1,1,1,0,1,1,1,0,1, 0,0,0,0,0,0,0), True, 1, [])
         self.blocks_unpacked_to_packed_xx_0 = blocks.unpacked_to_packed_bb(1, gr.GR_MSB_FIRST)
@@ -406,9 +406,9 @@ class multi_tx(grc_wxgui.top_block_gui):
 
     def set_q_offset(self, q_offset):
         self.q_offset = q_offset
-        self.blocks_add_const_vxx_1.set_k((self.i_offset + 1j * self.q_offset, ))
         self._q_offset_slider.set_value(self.q_offset)
         self._q_offset_text_box.set_value(self.q_offset)
+        self.blocks_add_const_vxx_1.set_k((self.i_offset + 1j * self.q_offset, ))
 
     def get_psk_on(self):
         return self.psk_on
@@ -457,9 +457,9 @@ class multi_tx(grc_wxgui.top_block_gui):
 
     def set_i_offset(self, i_offset):
         self.i_offset = i_offset
-        self.blocks_add_const_vxx_1.set_k((self.i_offset + 1j * self.q_offset, ))
         self._i_offset_slider.set_value(self.i_offset)
         self._i_offset_text_box.set_value(self.i_offset)
+        self.blocks_add_const_vxx_1.set_k((self.i_offset + 1j * self.q_offset, ))
 
     def get_gain(self):
         return self.gain

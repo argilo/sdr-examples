@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 ##################################################
 # Gnuradio Python Flow Graph
-# Title: VA3RFT
-# Generated: Sat Feb  1 10:05:01 2014
+# Title: VA3ODG
+# Generated: Sat Feb  1 10:04:32 2014
 ##################################################
 
 from gnuradio import analog
@@ -25,10 +25,10 @@ import math
 import osmosdr
 import wx
 
-class va3rft(grc_wxgui.top_block_gui):
+class va3odg(grc_wxgui.top_block_gui):
 
     def __init__(self):
-        grc_wxgui.top_block_gui.__init__(self, title="VA3RFT")
+        grc_wxgui.top_block_gui.__init__(self, title="VA3ODG")
         _icon_path = "/usr/share/icons/hicolor/32x32/apps/gnuradio-grc.png"
         self.SetIcon(wx.Icon(_icon_path, wx.BITMAP_TYPE_ANY))
 
@@ -136,7 +136,7 @@ class va3rft(grc_wxgui.top_block_gui):
         	1, 48000, 8000, 2000, firdes.WIN_HAMMING, 6.76))
         self.low_pass_filter_0 = filter.fir_filter_ccf(40, firdes.low_pass(
         	20, samp_rate, 3500, 2000, firdes.WIN_HAMMING, 6.76))
-        self.dsd_block_ff_0 = dsd.block_ff(dsd.dsd_FRAME_DMR_MOTOTRBO,dsd.dsd_MOD_AUTO_SELECT,3,2,True)
+        self.dsd_block_ff_0 = dsd.block_ff(dsd.dsd_FRAME_DSTAR,dsd.dsd_MOD_AUTO_SELECT,3,2,True)
         self.blocks_multiply_xx_0 = blocks.multiply_vcc(1)
         self.audio_sink_0 = audio.sink(8000, "", True)
         self.analog_sig_source_x_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, -offset, 1, 0)
@@ -217,7 +217,7 @@ if __name__ == '__main__':
             print "Warning: failed to XInitThreads()"
     parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
     (options, args) = parser.parse_args()
-    tb = va3rft()
+    tb = va3odg()
     tb.Start(True)
     tb.Wait()
 

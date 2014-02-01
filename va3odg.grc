@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Sat Feb  1 10:05:00 2014</timestamp>
+  <timestamp>Sat Feb  1 10:04:32 2014</timestamp>
   <block>
     <key>variable</key>
     <param>
@@ -252,57 +252,6 @@
     <param>
       <key>_coordinate</key>
       <value>(596, 251)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>dsd_block_ff</key>
-    <param>
-      <key>id</key>
-      <value>dsd_block_ff_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>frame</key>
-      <value>dsd.dsd_FRAME_DMR_MOTOTRBO</value>
-    </param>
-    <param>
-      <key>mod</key>
-      <value>dsd.dsd_MOD_AUTO_SELECT</value>
-    </param>
-    <param>
-      <key>uvquality</key>
-      <value>3</value>
-    </param>
-    <param>
-      <key>errorbars</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>verbosity</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(876, 547)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1069,10 +1018,61 @@
     </param>
   </block>
   <block>
+    <key>dsd_block_ff</key>
+    <param>
+      <key>id</key>
+      <value>dsd_block_ff_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>frame</key>
+      <value>dsd.dsd_FRAME_DSTAR</value>
+    </param>
+    <param>
+      <key>mod</key>
+      <value>dsd.dsd_MOD_AUTO_SELECT</value>
+    </param>
+    <param>
+      <key>uvquality</key>
+      <value>3</value>
+    </param>
+    <param>
+      <key>errorbars</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>verbosity</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(876, 547)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
     <key>options</key>
     <param>
       <key>id</key>
-      <value>va3rft</value>
+      <value>va3odg</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -1080,7 +1080,7 @@
     </param>
     <param>
       <key>title</key>
-      <value>VA3RFT</value>
+      <value>VA3ODG</value>
     </param>
     <param>
       <key>author</key>
