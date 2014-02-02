@@ -95,3 +95,16 @@ If the frequency correction slider is set correctly, you should see
 transmissions appearing in the center of the band in the middle of
 the waterfall.  Even when nobody is using the repeater, it transmits
 some packets about once every 80 seconds.
+
+
+atsc-blade.py & atsc-blade-usb2.py
+----------------------------------
+
+These examples transmit an ATSC digital television signal using the
+BladeRF.  An file containing an MPEG 2 transport stream must be
+supplied as input.  MPEG 2 transport streams can be produced with
+tools such as avconv and OpenCaster.  The first example, atsc-blade.py
+requires USB 3.0 to work properly, while the second example,
+atsc-blade-usb2.py reduces the output sample rate so as to run on a
+USB 2.0 port.  Both examples transmit on 438-444 MHz, but this can be
+changed by adjusting the center_freq variable.
