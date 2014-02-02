@@ -97,6 +97,20 @@ the waterfall.  Even when nobody is using the repeater, it transmits
 some packets about once every 80 seconds.
 
 
+va3odg.grc & va3odg.py
+----------------------
+
+This example is very similar to the DMR receiver above, but instead it
+receives D-STAR.  It is intended to receive the Ottawa-area D-STAR
+repeater VA3ODG on 444.850 MHz.
+
+Since the D-STAR receiver in DSD is not yet optimized for GMSK
+reception, I have worked around this problem by doing the GMSK
+demodulation in GNU Radio (with a Clock Recovery MM and a Binary
+Slicer block), then re-modulating the signal before passing it on to
+DSD.  This improves the bit error rate.
+
+
 atsc-blade.py & atsc-blade-usb2.py
 ----------------------------------
 

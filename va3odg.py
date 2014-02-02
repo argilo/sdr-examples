@@ -2,12 +2,13 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: VA3ODG
-# Generated: Sat Feb  1 10:18:36 2014
+# Generated: Sun Feb  2 10:00:19 2014
 ##################################################
 
 from gnuradio import analog
 from gnuradio import audio
 from gnuradio import blocks
+from gnuradio import digital
 from gnuradio import eng_notation
 from gnuradio import filter
 from gnuradio import gr
@@ -119,6 +120,8 @@ class va3odg(grc_wxgui.top_block_gui):
         	y_axis_label="Counts",
         )
         self.Add(self.wxgui_scopesink2_0.win)
+        self.root_raised_cosine_filter_0 = filter.interp_fir_filter_fff(10, firdes.root_raised_cosine(
+        	1, 48000, 4800, 0.35, 100))
         self.osmosdr_source_0 = osmosdr.source( args="numchan=" + str(1) + " " + "" )
         self.osmosdr_source_0.set_sample_rate(samp_rate)
         self.osmosdr_source_0.set_center_freq(freq - offset, 0)
@@ -137,6 +140,9 @@ class va3odg(grc_wxgui.top_block_gui):
         self.low_pass_filter_0 = filter.fir_filter_ccf(40, firdes.low_pass(
         	20, samp_rate, 3500, 2000, firdes.WIN_HAMMING, 6.76))
         self.dsd_block_ff_0 = dsd.block_ff(dsd.dsd_FRAME_DSTAR,dsd.dsd_MOD_AUTO_SELECT,3,2,True)
+        self.digital_clock_recovery_mm_xx_0 = digital.clock_recovery_mm_ff(10.0, 0.25*0.175*0.175, 0.5, 0.175, 0.005)
+        self.digital_chunks_to_symbols_xx_0 = digital.chunks_to_symbols_bf(([-1,1]), 1)
+        self.digital_binary_slicer_fb_0 = digital.binary_slicer_fb()
         self.blocks_multiply_xx_0 = blocks.multiply_vcc(1)
         self.audio_sink_0 = audio.sink(8000, "", True)
         self.analog_sig_source_x_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, -offset, 1, 0)
@@ -149,11 +155,15 @@ class va3odg(grc_wxgui.top_block_gui):
         self.connect((self.osmosdr_source_0, 0), (self.blocks_multiply_xx_0, 0))
         self.connect((self.blocks_multiply_xx_0, 0), (self.low_pass_filter_0, 0))
         self.connect((self.low_pass_filter_0, 0), (self.wxgui_waterfallsink2_1, 0))
-        self.connect((self.low_pass_filter_1, 0), (self.wxgui_scopesink2_0, 0))
-        self.connect((self.low_pass_filter_1, 0), (self.dsd_block_ff_0, 0))
-        self.connect((self.dsd_block_ff_0, 0), (self.audio_sink_0, 0))
-        self.connect((self.analog_quadrature_demod_cf_0, 0), (self.low_pass_filter_1, 0))
         self.connect((self.low_pass_filter_0, 0), (self.analog_quadrature_demod_cf_0, 0))
+        self.connect((self.digital_chunks_to_symbols_xx_0, 0), (self.root_raised_cosine_filter_0, 0))
+        self.connect((self.root_raised_cosine_filter_0, 0), (self.dsd_block_ff_0, 0))
+        self.connect((self.dsd_block_ff_0, 0), (self.audio_sink_0, 0))
+        self.connect((self.low_pass_filter_1, 0), (self.digital_clock_recovery_mm_xx_0, 0))
+        self.connect((self.digital_binary_slicer_fb_0, 0), (self.digital_chunks_to_symbols_xx_0, 0))
+        self.connect((self.digital_clock_recovery_mm_xx_0, 0), (self.digital_binary_slicer_fb_0, 0))
+        self.connect((self.analog_quadrature_demod_cf_0, 0), (self.low_pass_filter_1, 0))
+        self.connect((self.low_pass_filter_1, 0), (self.wxgui_scopesink2_0, 0))
 
 
 # QT sink close method reimplementation
