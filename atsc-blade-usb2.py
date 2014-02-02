@@ -52,9 +52,7 @@ def main(args):
 
     v2s = blocks.vector_to_stream(gr.sizeof_char, 1024)
     minn = blocks.keep_m_in_n(gr.sizeof_char, 832, 1024, 4)
-    c2sym = digital.chunks_to_symbols_bf(([symbol + 1.25 for symbol in [-7,-5,-3,-1,1,3,5,7]]), 1)
-    zero = analog.sig_source_f(0, analog.GR_CONST_WAVE, 0, 0, 0)
-    f2c = blocks.float_to_complex(1)
+    c2sym = digital.chunks_to_symbols_bc(([symbol + 1.25 for symbol in [-7,-5,-3,-1,1,3,5,7]]), 1)
     offset = analog.sig_source_c(symbol_rate, analog.GR_COS_WAVE, -3000000 + pilot_freq, 0.9, 0)
     mix = blocks.multiply_vcc(1)
     rrc_taps = firdes.root_raised_cosine(0.1, symbol_rate*2, symbol_rate/2, 0.1152, 200)
@@ -69,9 +67,7 @@ def main(args):
     out.set_bandwidth(6000000, 0)
 
     tb.connect(src, pad, rand, rs_enc, inter, trell, fsm, v2s, minn, c2sym)
-    tb.connect((c2sym, 0), (f2c, 0))
-    tb.connect((zero, 0), (f2c, 1))
-    tb.connect((f2c, 0), (mix, 0))
+    tb.connect((c2sym, 0), (mix, 0))
     tb.connect((offset, 0), (mix, 1))
     tb.connect(mix, rrc, out)
 
