@@ -36,7 +36,7 @@ def main(args):
     symbol_rate = 4500000.0 / 286 * 684
     pilot_freq = 309441
     center_freq = 441000000
-    txvga1_gain = 0
+    txvga1_gain = -4
     txvga2_gain = 25
 
     tb = gr.top_block()
