@@ -55,7 +55,7 @@ def main(args):
     c2sym = digital.chunks_to_symbols_bc(([symbol + 1.25 for symbol in [-7,-5,-3,-1,1,3,5,7]]), 1)
     offset = analog.sig_source_c(symbol_rate, analog.GR_COS_WAVE, -3000000 + pilot_freq, 0.9, 0)
     mix = blocks.multiply_vcc(1)
-    rrc = filter.fir_filter_ccf(1, firdes.root_raised_cosine(0.1, symbol_rate, symbol_rate/2, 0.1152, 100))
+    rrc = filter.fft_filter_ccc(1, firdes.root_raised_cosine(0.1, symbol_rate, symbol_rate/2, 0.1152, 100))
 
     out = osmosdr.sink(args="bladerf=0,buffers=128,buflen=32768")
     out.set_sample_rate(symbol_rate)
