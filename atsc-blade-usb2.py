@@ -1,6 +1,6 @@
 #!/usr/bin/env /usr/bin/python
 
-# Copyright 2013 Clayton Smith (argilo@gmail.com)
+# Copyright 2013-2014 Clayton Smith (argilo@gmail.com)
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
