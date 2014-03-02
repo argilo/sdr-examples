@@ -40,6 +40,7 @@ def main(args):
     mode = dvbt.T2k
     code_rate = dvbt.C1_2
     constellation = dvbt.QPSK
+    guard_interval = dvbt.G1_32
     symbol_rate = channel_mhz * 8000000.0 / 7
     center_freq = 441000000
     txvga1_gain = -4
@@ -51,6 +52,15 @@ def main(args):
     elif mode == dvbt.T8k:
         factor = 4
         carriers = 8192
+
+    if guard_interval == dvbt.G1_32:
+        gi = carriers / 32
+    elif guard_interval == dvbt.G1_16:
+        gi = carriers / 16
+    elif guard_interval == dvbt.G1_8:
+        gi = carriers / 8
+    elif guard_interval == dvbt.G1_4:
+        gi = carriers / 4
 
     if channel_mhz == 8:
         bandwidth = 8750000
@@ -76,7 +86,7 @@ def main(args):
     dvbt_dvbt_map = dvbt.dvbt_map((1512 * factor), constellation, dvbt.NH, mode, 1)
     dvbt_reference_signals = dvbt.reference_signals(gr.sizeof_gr_complex, (1512 * factor), carriers, constellation, dvbt.NH, code_rate, code_rate, dvbt.G1_32, mode, 0, 0)
     fft_vxx = fft.fft_vcc(carriers, False, (window.rectangular(carriers)), True, 10)
-    digital_ofdm_cyclic_prefixer = digital.ofdm_cyclic_prefixer(carriers, carriers+(64 * factor), 0, "")
+    digital_ofdm_cyclic_prefixer = digital.ofdm_cyclic_prefixer(carriers, carriers+(gi), 0, "")
     blocks_multiply_const_vxx = blocks.multiply_const_vcc((0.0022097087 * 2.5, ))
 
     out = osmosdr.sink(args="bladerf=0,buffers=128,buflen=32768")
