@@ -19,12 +19,13 @@ def module_replace_bytes(filename, old_bytes, new_bytes):
     if not os.path.isfile(filename + "-unsigned"):
         raise Exception("Objcopy failed")
 
-    os.rename(filename, filename + "-original")
-
     with open(filename + "-unsigned", "rb") as f:
         bytes = f.read()
     if bytes.count(old_bytes) != 1:
+        os.remove(filename + "-unsigned")
         raise Exception("Bytes not found in kernel module")
+
+    os.rename(filename, filename + "-original")
 
     with open(filename, "wb") as f:
         f.write(bytes.replace(old_bytes, new_bytes))
@@ -36,5 +37,5 @@ old_r820t_bytes   = struct.pack("i", OLD_R820T_MAX)
 new_max_bytes     = struct.pack("i", NEW_MAX)
 
 module_path = '/lib/modules/' + os.uname()[2]
-module_replace_bytes(module_path + "/kernel/drivers/media/dvb-frontends/rtl2832.ko", old_r820t_bytes, new_max_bytes)
+module_replace_bytes(module_path + "/kernel/drivers/media/dvb-frontends/rtl2832.ko", old_rtl2832_bytes, new_max_bytes)
 module_replace_bytes(module_path + "/kernel/drivers/media/tuners/r820t.ko", old_r820t_bytes, new_max_bytes)
