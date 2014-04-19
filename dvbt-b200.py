@@ -76,14 +76,13 @@ def main(args):
     tb = gr.top_block()
 
     out = uhd.usrp_sink(
-        	device_addr="recv_frame_size=65536,num_recv_frames=128,send_frame_size=65536,num_send_frames=128",
+        	device_addr="recv_frame_size=65536,num_recv_frames=128,send_frame_size=65536,num_send_frames=128,master_clock_rate=" + str(symbol_rate*4),
         	stream_args=uhd.stream_args(
         		cpu_format="fc32",
         		otw_format="sc16",
         		channels=range(1),
         	),
         )
-    out.set_clock_rate(symbol_rate * 4, uhd.ALL_MBOARDS)
     out.set_samp_rate(symbol_rate)
     out.set_center_freq(center_freq, 0)
     out.set_gain(tx_gain, 0)
