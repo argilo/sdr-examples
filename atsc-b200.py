@@ -35,7 +35,7 @@ def main(args):
 
     symbol_rate = 4500000.0 / 286 * 684
     pilot_freq = 309441
-    center_freq = 435000000
+    center_freq = 441000000
     tx_gain = 83 # max 89.5
 
     tb = gr.top_block()
