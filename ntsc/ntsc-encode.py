@@ -1,18 +1,21 @@
-#!/usr/bin/env /usr/bin/python
-# Copyright 2013-2014 Clayton Smith (argilo@gmail.com)
+# Copyright 2014 Clayton Smith
 #
-# This program is free software: you can redistribute it and/or modify
+# This file is part of sdr-examples
+#
+# sdr-examples is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
 #
-# This program is distributed in the hope that it will be useful,
+# sdr-examples is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program. If not, see <http://www.gnu.org/licenses/>.
+# along with sdr-examples; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
 
 from PIL import Image
 from array import array
@@ -22,12 +25,10 @@ image = Image.open("ve3irr-testing.png")
 #image = Image.open("smpte-bars.png")
 pixels = list(image.getdata())
 
-USRP_SAMP_RATE = 12500000.0
 COLOR_FREQ = 3579545.0
 SAMPLES_PER_LINE = 772
-SAMPLES_PER_LINE_AFTER_INTERPOLATION = int(0.5 + USRP_SAMP_RATE / (60*.999*525/2))
-OUR_SAMP_RATE = USRP_SAMP_RATE * SAMPLES_PER_LINE / SAMPLES_PER_LINE_AFTER_INTERPOLATION
-RADIANS_PER_SAMPLE = 2 * math.pi * COLOR_FREQ / OUR_SAMP_RATE
+SAMP_RATE = SAMPLES_PER_LINE * 60 * .999 * 525 / 2
+RADIANS_PER_SAMPLE = 2 * math.pi * COLOR_FREQ / SAMP_RATE
 
 SYNCH_LEVEL = -40.0
 BLANKING_LEVEL = 0.0
