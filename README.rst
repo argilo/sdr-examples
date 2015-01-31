@@ -1,27 +1,28 @@
-# Copyright 2013-2014 Clayton Smith
-#
-# This file is part of sdr-examples
-#
-# sdr-examples is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3, or (at your option)
-# any later version.
-#
-# sdr-examples is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with sdr-examples; see the file COPYING.  If not, write to
-# the Free Software Foundation, Inc., 51 Franklin Street,
-# Boston, MA 02110-1301, USA.
+::
+
+ # Copyright 2013-2014 Clayton Smith
+ #
+ # This file is part of sdr-examples
+ #
+ # sdr-examples is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 3, or (at your option)
+ # any later version.
+ #
+ # sdr-examples is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with sdr-examples; see the file COPYING.  If not, write to
+ # the Free Software Foundation, Inc., 51 Franklin Street,
+ # Boston, MA 02110-1301, USA.
 
 sdr-examples
 ============
 
-Author: Clayton Smith
-Email: <argilo@gmail.com>
+Author: Clayton Smith (argilo@gmail.com)
 
 This project is a collection of GNU Radio examples created for a
 tutorial session given at the Ottawa Amateur Radio Club.
@@ -156,7 +157,7 @@ Install the core GNURadio packages::
 
   sudo add-apt-repository ppa:gqrx/releases
   sudo apt-get update
-  sudo apt-get install gnuradio gnuradio-dev gnuradio-doc gqrx \
+  sudo apt-get install gnuradio gnuradio-dev gnuradio-doc gqrx
 
 Install drivers for some of the most common SDR dongles::
 
