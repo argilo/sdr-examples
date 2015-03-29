@@ -144,10 +144,10 @@ Windows laptops.
 Install a few essential pieces in order to make it easier for people to use
 the system and work with these example flow graphs::
 
-  sudo apt-get install linux-firmware-nonfree
+    sudo apt-get install linux-firmware-nonfree
 
-  sudo apt-get install git
-  git clone --recursive https://github.com/argilo/sdr-examples.git
+    sudo apt-get install git
+    git clone --recursive https://github.com/argilo/sdr-examples.git
 
 
 Install GNURadio and Related Tools
@@ -155,14 +155,14 @@ Install GNURadio and Related Tools
 
 Install the core GNURadio packages::
 
-  sudo add-apt-repository ppa:gqrx/releases
-  sudo apt-get update
-  sudo apt-get install gnuradio gnuradio-dev gnuradio-doc gqrx
+    sudo add-apt-repository ppa:gqrx/releases
+    sudo apt-get update
+    sudo apt-get install gnuradio gnuradio-dev gnuradio-doc gqrx-sdr
 
 Install drivers for some of the most common SDR dongles::
 
-  sudo apt-get install rtl-sdr bladerf hackrf airspy \
-    gr-fcdproplus qthid-fcd-controller
+    sudo apt-get install rtl-sdr hackrf bladerf-host \
+        gr-fcdproplus qthid-fcd-controller
 
 Add GRC and gqrx to the favourites in the xfce menu.
 
@@ -174,13 +174,13 @@ Purge old kernels.
 
 ::
 
-  sudo apt-get install localepurge
-  sudo apt-get clean
-  cat /dev/zero > zero.fill ; sync ; sleep 1 ; sync ; rm -rf zero.fill
+    sudo apt-get install localepurge
+    sudo apt-get clean
+    cat /dev/zero > zero.fill ; sync ; sleep 1 ; sync ; rm -rf zero.fill
 
 Shut down.
 
 ::
 
-  sudo dd if=/dev/sdb bs=1M count=7500 |\
-    gzip --rsyncable > bootable_image.img.gz
+    sudo dd if=/dev/sdb bs=1M count=7500 |\
+        gzip --rsyncable > bootable_image.img.gz
