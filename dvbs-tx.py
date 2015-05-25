@@ -119,7 +119,7 @@ def main():
         tb = gr.top_block()
 
         if options.stdin:
-            blocks_file_source_0 = blocks.file_descriptor_source(gr.sizeof_char, 0, options.repeat)
+            blocks_file_source_0 = blocks.file_descriptor_source(gr.sizeof_char, 0, False)
         else:
             blocks_file_source_0 = blocks.file_source(gr.sizeof_char, options.ts_file, options.repeat)
 

@@ -57,6 +57,8 @@ def getInputOptions():
     parser.add_option("-g", "--guard-interval", dest="guard_interval_str", help="Guard interval: %s (default 1/4)" % guard_intervals.keys(), metavar="GUARD_INTERVAL", type="string")   
     parser.add_option("-c", "--constellation", dest="constellation_str", help="Constellations: %s (default QPSK)" % constellations.keys(), metavar="CONSTELLATION", type="string")   
     parser.add_option("-G", "--txvga-gains", dest="txvga_gains_str", help="Comma separated TX VGA gains 1 and 2 (default: %s)" % default_txvga_gains_str, metavar="GAINS", type="string")   
+    parser.add_option("-R", "--repeat", dest="repeat", help="Loop on input file indefinitely (delfault No)", metavar="CANCEL_LOCAL", action="store_true", default=False)
+    parser.add_option("-I", "--stdin", dest="stdin", help="Input from stdin (delfault No)", metavar="CANCEL_LOCAL", action="store_true", default=False)
 
     (options, args) = parser.parse_args()
     
@@ -121,6 +123,9 @@ def main():
     try:
         options = getInputOptions()
 
+        ##################################################
+        # Variables
+        ##################################################
 
         channel_mhz = options.width / 1e6
         symbol_rate = channel_mhz * 8000000.0 / 7
@@ -156,9 +161,16 @@ def main():
         else:
             bandwidth = 8750000
 
+        ##################################################
+        # Blocks
+        ##################################################
+
         tb = gr.top_block()
 
-        src = blocks.file_source(gr.sizeof_char, options.ts_file, True)
+        if options.stdin:
+            src = blocks.file_descriptor_source(gr.sizeof_char, 0, False)
+        else:
+            src = blocks.file_source(gr.sizeof_char, options.ts_file, options.repeat)
 
         dvbt_energy_dispersal = dvbt.energy_dispersal(1 * factor)
         dvbt_reed_solomon_enc = dvbt.reed_solomon_enc(2, 8, 0x11d, 255, 239, 8, 51, (8 * factor))
@@ -179,6 +191,10 @@ def main():
         out.set_gain(txvga2_gain, 0)
         out.set_bb_gain(txvga1_gain, 0)
         out.set_bandwidth(bandwidth, 0)
+
+        ##################################################
+        # Connections
+        ##################################################
 
         tb.connect(src, dvbt_energy_dispersal)
         tb.connect(dvbt_energy_dispersal, dvbt_reed_solomon_enc)
