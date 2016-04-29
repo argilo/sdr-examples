@@ -17,11 +17,11 @@
 
 from gnuradio import blocks
 from gnuradio import digital
+from gnuradio import dtv
 from gnuradio import fft
 from gnuradio import gr
 from gnuradio.fft import window
 from grc_gnuradio import blks2 as grc_blks2
-import dvbt
 import osmosdr
 import sys
 
@@ -38,29 +38,29 @@ def main(args):
         sys.exit(1)
 
     channel_mhz = 6
-    mode = dvbt.T2k
-    code_rate = dvbt.C1_2
-    constellation = dvbt.QPSK
-    guard_interval = dvbt.G1_32
+    mode = dtv.T2k
+    code_rate = dtv.C1_2
+    constellation = dtv.MOD_QPSK
+    guard_interval = dtv.GI_1_32
     symbol_rate = channel_mhz * 8000000.0 / 7
     center_freq = 441000000
     rf_gain = 14
     if_gain = 40
 
-    if mode == dvbt.T2k:
+    if mode == dtv.T2k:
         factor = 1
         carriers = 2048
-    elif mode == dvbt.T8k:
+    elif mode == dtv.T8k:
         factor = 4
         carriers = 8192
 
-    if guard_interval == dvbt.G1_32:
+    if guard_interval == dtv.GI_1_32:
         gi = carriers / 32
-    elif guard_interval == dvbt.G1_16:
+    elif guard_interval == dtv.GI_1_16:
         gi = carriers / 16
-    elif guard_interval == dvbt.G1_8:
+    elif guard_interval == dtv.GI_1_8:
         gi = carriers / 8
-    elif guard_interval == dvbt.G1_4:
+    elif guard_interval == dtv.GI_1_4:
         gi = carriers / 4
 
     if channel_mhz == 8:
@@ -78,19 +78,19 @@ def main(args):
 
     src = grc_blks2.tcp_source(gr.sizeof_char*1, "127.0.0.1", port, True)
 
-    dvbt_energy_dispersal = dvbt.energy_dispersal(1 * factor)
-    dvbt_reed_solomon_enc = dvbt.reed_solomon_enc(2, 8, 0x11d, 255, 239, 8, 51, (8 * factor))
-    dvbt_convolutional_interleaver = dvbt.convolutional_interleaver((136 * factor), 12, 17)
-    dvbt_inner_coder = dvbt.inner_coder(1, (1512 * factor), constellation, dvbt.NH, code_rate)
-    dvbt_bit_inner_interleaver = dvbt.bit_inner_interleaver((1512 * factor), constellation, dvbt.NH, mode)
-    dvbt_symbol_inner_interleaver = dvbt.symbol_inner_interleaver((1512 * factor), mode, 1)
-    dvbt_dvbt_map = dvbt.dvbt_map((1512 * factor), constellation, dvbt.NH, mode, 1)
-    dvbt_reference_signals = dvbt.reference_signals(gr.sizeof_gr_complex, (1512 * factor), carriers, constellation, dvbt.NH, code_rate, code_rate, dvbt.G1_32, mode, 0, 0)
+    dvbt_energy_dispersal = dtv.dvbt_energy_dispersal(1 * factor)
+    dvbt_reed_solomon_enc = dtv.dvbt_reed_solomon_enc(2, 8, 0x11d, 255, 239, 8, 51, (8 * factor))
+    dvbt_convolutional_interleaver = dtv.dvbt_convolutional_interleaver((136 * factor), 12, 17)
+    dvbt_inner_coder = dtv.dvbt_inner_coder(1, (1512 * factor), constellation, dtv.NH, code_rate)
+    dvbt_bit_inner_interleaver = dtv.dvbt_bit_inner_interleaver((1512 * factor), constellation, dtv.NH, mode)
+    dvbt_symbol_inner_interleaver = dtv.dvbt_symbol_inner_interleaver((1512 * factor), mode, 1)
+    dvbt_map = dtv.dvbt_map((1512 * factor), constellation, dtv.NH, mode, 1)
+    dvbt_reference_signals = dtv.dvbt_reference_signals(gr.sizeof_gr_complex, (1512 * factor), carriers, constellation, dtv.NH, code_rate, code_rate, dtv.GI_1_32, mode, 0, 0)
     fft_vxx = fft.fft_vcc(carriers, False, (window.rectangular(carriers)), True, 10)
     digital_ofdm_cyclic_prefixer = digital.ofdm_cyclic_prefixer(carriers, carriers+(gi), 0, "")
     blocks_multiply_const_vxx = blocks.multiply_const_vcc((0.0022097087 * 2.5, ))
 
-    out = osmosdr.sink(args="hackrf=0")
+    out = osmosdr.sink()
     out.set_sample_rate(symbol_rate)
     out.set_center_freq(center_freq, 0)
     out.set_freq_corr(0, 0)
@@ -104,8 +104,8 @@ def main(args):
     tb.connect(dvbt_convolutional_interleaver, dvbt_inner_coder)
     tb.connect(dvbt_inner_coder, dvbt_bit_inner_interleaver)
     tb.connect(dvbt_bit_inner_interleaver, dvbt_symbol_inner_interleaver)
-    tb.connect(dvbt_symbol_inner_interleaver, dvbt_dvbt_map)
-    tb.connect(dvbt_dvbt_map, dvbt_reference_signals)
+    tb.connect(dvbt_symbol_inner_interleaver, dvbt_map)
+    tb.connect(dvbt_map, dvbt_reference_signals)
     tb.connect(dvbt_reference_signals, fft_vxx)
     tb.connect(fft_vxx, digital_ofdm_cyclic_prefixer)
     tb.connect(digital_ofdm_cyclic_prefixer, blocks_multiply_const_vxx)
