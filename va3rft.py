@@ -1,9 +1,20 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
 ##################################################
-# Gnuradio Python Flow Graph
+# GNU Radio Python Flow Graph
 # Title: VA3RFT
-# Generated: Sat Feb  1 10:05:01 2014
+# Generated: Mon Oct 24 20:36:19 2016
 ##################################################
+
+if __name__ == '__main__':
+    import ctypes
+    import sys
+    if sys.platform.startswith('linux'):
+        try:
+            x11 = ctypes.cdll.LoadLibrary('libX11.so')
+            x11.XInitThreads()
+        except:
+            print "Warning: failed to XInitThreads()"
 
 from gnuradio import analog
 from gnuradio import audio
@@ -23,14 +34,14 @@ from optparse import OptionParser
 import dsd
 import math
 import osmosdr
+import time
 import wx
+
 
 class va3rft(grc_wxgui.top_block_gui):
 
     def __init__(self):
         grc_wxgui.top_block_gui.__init__(self, title="VA3RFT")
-        _icon_path = "/usr/share/icons/hicolor/32x32/apps/gnuradio-grc.png"
-        self.SetIcon(wx.Icon(_icon_path, wx.BITMAP_TYPE_ANY))
 
         ##################################################
         # Variables
@@ -51,7 +62,7 @@ class va3rft(grc_wxgui.top_block_gui):
         	sizer=_gain_sizer,
         	value=self.gain,
         	callback=self.set_gain,
-        	label="RX gain",
+        	label='RX gain',
         	converter=forms.float_converter(),
         	proportion=0,
         )
@@ -74,7 +85,7 @@ class va3rft(grc_wxgui.top_block_gui):
         	sizer=_corr_sizer,
         	value=self.corr,
         	callback=self.set_corr,
-        	label="Freq. correction",
+        	label='Freq. correction',
         	converter=forms.float_converter(),
         	proportion=0,
         )
@@ -102,12 +113,12 @@ class va3rft(grc_wxgui.top_block_gui):
         	fft_rate=3,
         	average=False,
         	avg_alpha=None,
-        	title="Waterfall Plot",
+        	title='Waterfall Plot',
         )
         self.Add(self.wxgui_waterfallsink2_1.win)
         self.wxgui_scopesink2_0 = scopesink2.scope_sink_f(
         	self.GetWin(),
-        	title="Scope Plot",
+        	title='Scope Plot',
         	sample_rate=48000,
         	v_scale=0.25,
         	v_offset=0,
@@ -116,73 +127,70 @@ class va3rft(grc_wxgui.top_block_gui):
         	xy_mode=False,
         	num_inputs=1,
         	trig_mode=wxgui.TRIG_MODE_AUTO,
-        	y_axis_label="Counts",
+        	y_axis_label='Counts',
         )
         self.Add(self.wxgui_scopesink2_0.win)
-        self.osmosdr_source_0 = osmosdr.source( args="numchan=" + str(1) + " " + "" )
+        self.osmosdr_source_0 = osmosdr.source( args="numchan=" + str(1) + " " + '' )
         self.osmosdr_source_0.set_sample_rate(samp_rate)
         self.osmosdr_source_0.set_center_freq(freq - offset, 0)
         self.osmosdr_source_0.set_freq_corr(corr, 0)
         self.osmosdr_source_0.set_dc_offset_mode(0, 0)
         self.osmosdr_source_0.set_iq_balance_mode(0, 0)
-        self.osmosdr_source_0.set_gain_mode(0, 0)
+        self.osmosdr_source_0.set_gain_mode(False, 0)
         self.osmosdr_source_0.set_gain(gain, 0)
         self.osmosdr_source_0.set_if_gain(20, 0)
         self.osmosdr_source_0.set_bb_gain(20, 0)
-        self.osmosdr_source_0.set_antenna("", 0)
+        self.osmosdr_source_0.set_antenna('', 0)
         self.osmosdr_source_0.set_bandwidth(0, 0)
           
         self.low_pass_filter_1 = filter.fir_filter_fff(1, firdes.low_pass(
         	1, 48000, 8000, 2000, firdes.WIN_HAMMING, 6.76))
         self.low_pass_filter_0 = filter.fir_filter_ccf(40, firdes.low_pass(
         	20, samp_rate, 3500, 2000, firdes.WIN_HAMMING, 6.76))
-        self.dsd_block_ff_0 = dsd.block_ff(dsd.dsd_FRAME_DMR_MOTOTRBO,dsd.dsd_MOD_AUTO_SELECT,3,2,True)
+        self.dsd_block_ff_0 = dsd.dsd_block_ff(dsd.dsd_FRAME_DMR_MOTOTRBO,dsd.dsd_MOD_AUTO_SELECT,3,True,2)
         self.blocks_multiply_xx_0 = blocks.multiply_vcc(1)
-        self.audio_sink_0 = audio.sink(8000, "", True)
+        self.audio_sink_0 = audio.sink(8000, '', True)
         self.analog_sig_source_x_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, -offset, 1, 0)
         self.analog_quadrature_demod_cf_0 = analog.quadrature_demod_cf(1)
 
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.analog_sig_source_x_0, 0), (self.blocks_multiply_xx_0, 1))
-        self.connect((self.osmosdr_source_0, 0), (self.blocks_multiply_xx_0, 0))
-        self.connect((self.blocks_multiply_xx_0, 0), (self.low_pass_filter_0, 0))
-        self.connect((self.low_pass_filter_0, 0), (self.wxgui_waterfallsink2_1, 0))
-        self.connect((self.low_pass_filter_1, 0), (self.wxgui_scopesink2_0, 0))
-        self.connect((self.low_pass_filter_1, 0), (self.dsd_block_ff_0, 0))
-        self.connect((self.dsd_block_ff_0, 0), (self.audio_sink_0, 0))
-        self.connect((self.analog_quadrature_demod_cf_0, 0), (self.low_pass_filter_1, 0))
-        self.connect((self.low_pass_filter_0, 0), (self.analog_quadrature_demod_cf_0, 0))
-
-
-# QT sink close method reimplementation
+        self.connect((self.analog_quadrature_demod_cf_0, 0), (self.low_pass_filter_1, 0))    
+        self.connect((self.analog_sig_source_x_0, 0), (self.blocks_multiply_xx_0, 1))    
+        self.connect((self.blocks_multiply_xx_0, 0), (self.low_pass_filter_0, 0))    
+        self.connect((self.dsd_block_ff_0, 0), (self.audio_sink_0, 0))    
+        self.connect((self.low_pass_filter_0, 0), (self.analog_quadrature_demod_cf_0, 0))    
+        self.connect((self.low_pass_filter_0, 0), (self.wxgui_waterfallsink2_1, 0))    
+        self.connect((self.low_pass_filter_1, 0), (self.dsd_block_ff_0, 0))    
+        self.connect((self.low_pass_filter_1, 0), (self.wxgui_scopesink2_0, 0))    
+        self.connect((self.osmosdr_source_0, 0), (self.blocks_multiply_xx_0, 0))    
 
     def get_samp_rate(self):
         return self.samp_rate
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
-        self.analog_sig_source_x_0.set_sampling_freq(self.samp_rate)
-        self.low_pass_filter_0.set_taps(firdes.low_pass(20, self.samp_rate, 3500, 2000, firdes.WIN_HAMMING, 6.76))
         self.osmosdr_source_0.set_sample_rate(self.samp_rate)
+        self.low_pass_filter_0.set_taps(firdes.low_pass(20, self.samp_rate, 3500, 2000, firdes.WIN_HAMMING, 6.76))
+        self.analog_sig_source_x_0.set_sampling_freq(self.samp_rate)
 
     def get_offset(self):
         return self.offset
 
     def set_offset(self, offset):
         self.offset = offset
-        self.analog_sig_source_x_0.set_frequency(-self.offset)
         self.osmosdr_source_0.set_center_freq(self.freq - self.offset, 0)
+        self.analog_sig_source_x_0.set_frequency(-self.offset)
 
     def get_gain(self):
         return self.gain
 
     def set_gain(self, gain):
         self.gain = gain
-        self.osmosdr_source_0.set_gain(self.gain, 0)
         self._gain_slider.set_value(self.gain)
         self._gain_text_box.set_value(self.gain)
+        self.osmosdr_source_0.set_gain(self.gain, 0)
 
     def get_fsk_deviation_hz(self):
         return self.fsk_deviation_hz
@@ -202,22 +210,17 @@ class va3rft(grc_wxgui.top_block_gui):
 
     def set_corr(self, corr):
         self.corr = corr
-        self.osmosdr_source_0.set_freq_corr(self.corr, 0)
         self._corr_slider.set_value(self.corr)
         self._corr_text_box.set_value(self.corr)
+        self.osmosdr_source_0.set_freq_corr(self.corr, 0)
 
-if __name__ == '__main__':
-    import ctypes
-    import os
-    if os.name == 'posix':
-        try:
-            x11 = ctypes.cdll.LoadLibrary('libX11.so')
-            x11.XInitThreads()
-        except:
-            print "Warning: failed to XInitThreads()"
-    parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
-    (options, args) = parser.parse_args()
-    tb = va3rft()
+
+def main(top_block_cls=va3rft, options=None):
+
+    tb = top_block_cls()
     tb.Start(True)
     tb.Wait()
 
+
+if __name__ == '__main__':
+    main()
