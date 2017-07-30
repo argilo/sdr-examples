@@ -24,8 +24,6 @@ class pager_rx(grc_wxgui.top_block_gui):
 
     def __init__(self, options, queue):
         grc_wxgui.top_block_gui.__init__(self, title="Pager Rx")
-        _icon_path = "/usr/share/icons/hicolor/32x32/apps/gnuradio-grc.png"
-        self.SetIcon(wx.Icon(_icon_path, wx.BITMAP_TYPE_ANY))
 
         ##################################################
         # Variables
@@ -136,7 +134,7 @@ class pager_rx(grc_wxgui.top_block_gui):
         self.GridAdd(self.wxgui_waterfallsink2_0.win, 2, 0, 1, 3)
         def wxgui_waterfallsink2_0_callback(x, y):
         	self.set_click_freq(x)
-        
+
         self.wxgui_waterfallsink2_0.set_callback(wxgui_waterfallsink2_0_callback)
         self.osmosdr_source_0 = osmosdr.source( args="numchan=" + str(1) + " " + "" )
         self.osmosdr_source_0.set_sample_rate(samp_rate)
@@ -144,13 +142,13 @@ class pager_rx(grc_wxgui.top_block_gui):
         self.osmosdr_source_0.set_freq_corr(corr, 0)
         self.osmosdr_source_0.set_dc_offset_mode(0, 0)
         self.osmosdr_source_0.set_iq_balance_mode(0, 0)
-        self.osmosdr_source_0.set_gain_mode(0, 0)
+        self.osmosdr_source_0.set_gain_mode(False, 0)
         self.osmosdr_source_0.set_gain(gain, 0)
         self.osmosdr_source_0.set_if_gain(20, 0)
         self.osmosdr_source_0.set_bb_gain(20, 0)
         self.osmosdr_source_0.set_antenna("", 0)
         self.osmosdr_source_0.set_bandwidth(0, 0)
-          
+
         self.freq_xlating_fir_filter_xxx_0 = filter.freq_xlating_fir_filter_ccc(samp_rate / channel_rate, (filter.optfir.low_pass(1.0, samp_rate, 11000, 12500, 0.1, 60)), freq - band, samp_rate)
         _channel_sizer = wx.BoxSizer(wx.VERTICAL)
         self._channel_text_box = forms.text_box(
@@ -281,4 +279,3 @@ if __name__ == '__main__':
     #tb = pager_rx()
     tb.Start(True)
     tb.Wait()
-
