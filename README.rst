@@ -1,6 +1,6 @@
 ::
 
- # Copyright 2013-2014 Clayton Smith
+ # Copyright 2013-2017 Clayton Smith
  #
  # This file is part of sdr-examples
  #
