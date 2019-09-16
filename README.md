@@ -117,7 +117,7 @@ Force the root partition to be 7.5 GB so that it can be installed on
 
 Boot Xubuntu, install updates and restart.
 
-In /etc/default/rcS, set "UTC=no" so it won't mess up the system clock on
+In `/etc/default/rcS`, set `UTC=no` so it won't mess up the system clock on
 Windows laptops.
 
 Install a few essential pieces in order to make it easier for people to use
@@ -132,7 +132,7 @@ the system and work with these example flow graphs::
 Install GNURadio and Related Tools
 ----------------------------------
 
-Install the core GNURadio packages::
+Install the core GNURadio packages:
 
     sudo add-apt-repository ppa:gqrx/releases
     sudo apt-get update
@@ -151,15 +151,11 @@ Compress Bootable Image
 
 Purge old kernels.
 
-::
-
     sudo apt-get install localepurge
     sudo apt-get clean
     cat /dev/zero > zero.fill ; sync ; sleep 1 ; sync ; rm -rf zero.fill
 
 Shut down.
-
-::
 
     sudo dd if=/dev/sdb bs=1M count=7500 |\
         gzip --rsyncable > bootable_image.img.gz
