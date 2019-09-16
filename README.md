@@ -121,7 +121,7 @@ In `/etc/default/rcS`, set `UTC=no` so it won't mess up the system clock on
 Windows laptops.
 
 Install a few essential pieces in order to make it easier for people to use
-the system and work with these example flow graphs::
+the system and work with these example flow graphs:
 
     sudo apt-get install linux-firmware-nonfree
 
@@ -138,7 +138,7 @@ Install the core GNURadio packages:
     sudo apt-get update
     sudo apt-get install gnuradio gnuradio-dev gnuradio-doc gqrx-sdr
 
-Install drivers for some of the most common SDR dongles::
+Install drivers for some of the most common SDR dongles:
 
     sudo apt-get install rtl-sdr hackrf bladerf-host \
         gr-fcdproplus qthid-fcd-controller
