@@ -38,6 +38,7 @@ EXTRA_HALF_LINE = [BLANKING_LEVEL] * 429
 FRONT_PORCH = [BLANKING_LEVEL] * 20
 SYNCH_PULSE = [SYNCH_LEVEL] * 63
 
+
 def addBackPorch():
     global ntsc_signal
     ntsc_signal += [BLANKING_LEVEL] * 14
@@ -46,11 +47,13 @@ def addBackPorch():
         ntsc_signal += [BLANKING_LEVEL + 20 * math.sin(math.pi + RADIANS_PER_SAMPLE * x)]
     ntsc_signal += [BLANKING_LEVEL] * 14
 
+
 def addNonVisibleLine():
     global ntsc_signal
     ntsc_signal += SYNCH_PULSE
     addBackPorch()
     ntsc_signal += [BLANKING_LEVEL] * 732
+
 
 def addFirstHalfFrame():
     global ntsc_signal
@@ -58,11 +61,13 @@ def addFirstHalfFrame():
     addBackPorch()
     ntsc_signal += [BLACK_LEVEL] * 303
 
+
 def addSecondHalfFrame():
     global ntsc_signal
     ntsc_signal += SYNCH_PULSE
     addBackPorch()
     ntsc_signal += [BLANKING_LEVEL] * 303 + [BLACK_LEVEL] * 409 + FRONT_PORCH
+
 
 def addPixel(y, cb, cr):
     global ntsc_signal, BLACK_LEVEL, WHITE_LEVEL
@@ -75,6 +80,7 @@ def addPixel(y, cb, cr):
 
     ntsc_signal += [BLACK_LEVEL + (WHITE_LEVEL - BLACK_LEVEL) * Em]
 
+
 def interpolate(samples):
     # For now, just double up the samples
     result = []
@@ -82,18 +88,20 @@ def interpolate(samples):
         result.extend([s, s])
     return result
 
-#with open("bars601.yuv", "rb") as fin:
+
+# with open("bars601.yuv", "rb") as fin:
 with open("out.yuv", "rb") as fin:
     while True:
         ntsc_signal = []
         bb = fin.read(720 * 480 * 2)
-        if bb == '': break
+        if bb == '':
+            break
 
         # Generate even field
         ntsc_signal += INTERVALS
         for x in range(13):
             addNonVisibleLine()
-        for line in range(0,480,2):
+        for line in range(0, 480, 2):
             ntsc_signal += SYNCH_PULSE
             addBackPorch()
 
@@ -112,7 +120,7 @@ with open("out.yuv", "rb") as fin:
         for x in range(12):
             addNonVisibleLine()
         addSecondHalfFrame()
-        for line in range(1,481,2):
+        for line in range(1, 481, 2):
             ntsc_signal += SYNCH_PULSE
             addBackPorch()
 

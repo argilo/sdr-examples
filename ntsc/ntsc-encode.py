@@ -22,7 +22,7 @@ from array import array
 import math
 
 image = Image.open("ve3irr-testing.png")
-#image = Image.open("smpte-bars.png")
+# image = Image.open("smpte-bars.png")
 pixels = list(image.getdata())
 
 COLOR_FREQ = 3579545.0
@@ -43,6 +43,7 @@ EXTRA_HALF_LINE = [BLANKING_LEVEL] * 386
 FRONT_PORCH = [BLANKING_LEVEL] * 18
 SYNCH_PULSE = [SYNCH_LEVEL] * 57
 
+
 def addBackPorch():
     global ntsc_signal
     ntsc_signal += [BLANKING_LEVEL] * 13
@@ -51,11 +52,13 @@ def addBackPorch():
         ntsc_signal += [BLANKING_LEVEL + 20 * math.sin(math.pi + RADIANS_PER_SAMPLE * x)]
     ntsc_signal += [BLANKING_LEVEL] * 13
 
+
 def addNonVisibleLine():
     global ntsc_signal
     ntsc_signal += SYNCH_PULSE
     addBackPorch()
     ntsc_signal += [BLANKING_LEVEL] * 658
+
 
 def addFirstHalfFrame():
     global ntsc_signal
@@ -63,11 +66,13 @@ def addFirstHalfFrame():
     addBackPorch()
     ntsc_signal += [BLACK_LEVEL] * 272
 
+
 def addSecondHalfFrame():
     global ntsc_signal
     ntsc_signal += SYNCH_PULSE
     addBackPorch()
     ntsc_signal += [BLANKING_LEVEL] * 272 + [BLACK_LEVEL] * 368 + FRONT_PORCH
+
 
 def addPixel(p):
     global ntsc_signal, BLACK_LEVEL, WHITE_LEVEL
@@ -84,13 +89,14 @@ def addPixel(p):
 
     ntsc_signal += [BLACK_LEVEL + (WHITE_LEVEL - BLACK_LEVEL) * Em]
 
+
 ntsc_signal = []
 
 # Generate even field
 ntsc_signal += INTERVALS
 for x in range(13):
     addNonVisibleLine()
-for line in range(0,480,2):
+for line in range(0, 480, 2):
     ntsc_signal += SYNCH_PULSE
     addBackPorch()
     for x in range(line * 640, (line+1) * 640):
@@ -103,7 +109,7 @@ ntsc_signal += INTERVALS + EXTRA_HALF_LINE
 for x in range(12):
     addNonVisibleLine()
 addSecondHalfFrame()
-for line in range(1,481,2):
+for line in range(1, 481, 2):
     ntsc_signal += SYNCH_PULSE
     addBackPorch()
     for x in range(line * 640, (line+1) * 640):
