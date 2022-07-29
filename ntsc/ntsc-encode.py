@@ -26,7 +26,7 @@ image = Image.open("ve3irr-testing.png")
 pixels = list(image.getdata())
 
 COLOR_FREQ = 3579545.0
-SAMPLES_PER_LINE = 772
+SAMPLES_PER_LINE = 768
 SAMP_RATE = SAMPLES_PER_LINE * 60 * .999 * 525 / 2
 RADIANS_PER_SAMPLE = 2 * math.pi * COLOR_FREQ / SAMP_RATE
 
@@ -35,10 +35,10 @@ BLANKING_LEVEL = 0.0
 BLACK_LEVEL = 7.5
 WHITE_LEVEL = 100.0
 
-EQUALIZING_PULSE = [SYNCH_LEVEL] * 28 + [BLANKING_LEVEL] * 358
-SYNCHRONIZING_PULSE = [SYNCH_LEVEL] * 329 + [BLANKING_LEVEL] * 57
+EQUALIZING_PULSE = [SYNCH_LEVEL] * 28 + [BLANKING_LEVEL] * 356
+SYNCHRONIZING_PULSE = [SYNCH_LEVEL] * 327 + [BLANKING_LEVEL] * 57
 INTERVALS = EQUALIZING_PULSE * 6 + SYNCHRONIZING_PULSE * 6 + EQUALIZING_PULSE * 6
-EXTRA_HALF_LINE = [BLANKING_LEVEL] * 386
+EXTRA_HALF_LINE = [BLANKING_LEVEL] * 384
 
 FRONT_PORCH = [BLANKING_LEVEL] * 18
 SYNCH_PULSE = [SYNCH_LEVEL] * 57
@@ -57,21 +57,21 @@ def addNonVisibleLine():
     global ntsc_signal
     ntsc_signal += SYNCH_PULSE
     addBackPorch()
-    ntsc_signal += [BLANKING_LEVEL] * 658
+    ntsc_signal += [BLANKING_LEVEL] * 654
 
 
 def addFirstHalfFrame():
     global ntsc_signal
     ntsc_signal += SYNCH_PULSE
     addBackPorch()
-    ntsc_signal += [BLACK_LEVEL] * 272
+    ntsc_signal += [BLACK_LEVEL] * 270
 
 
 def addSecondHalfFrame():
     global ntsc_signal
     ntsc_signal += SYNCH_PULSE
     addBackPorch()
-    ntsc_signal += [BLANKING_LEVEL] * 272 + [BLACK_LEVEL] * 368 + FRONT_PORCH
+    ntsc_signal += [BLANKING_LEVEL] * 270 + [BLACK_LEVEL] * 366 + FRONT_PORCH
 
 
 def addPixel(p):
@@ -99,7 +99,7 @@ for x in range(13):
 for line in range(0, 480, 2):
     ntsc_signal += SYNCH_PULSE
     addBackPorch()
-    for x in range(line * 640, (line+1) * 640):
+    for x in range(line * 640 + 2, (line+1) * 640 - 2):
         addPixel(pixels[x])
     ntsc_signal += FRONT_PORCH
 addFirstHalfFrame()
@@ -112,7 +112,7 @@ addSecondHalfFrame()
 for line in range(1, 481, 2):
     ntsc_signal += SYNCH_PULSE
     addBackPorch()
-    for x in range(line * 640, (line+1) * 640):
+    for x in range(line * 640 + 2, (line+1) * 640 - 2):
         addPixel(pixels[x])
     ntsc_signal += FRONT_PORCH
 
