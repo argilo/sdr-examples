@@ -44,71 +44,71 @@ FRONT_PORCH = [BLANKING_LEVEL] * 18
 SYNCH_PULSE = [SYNCH_LEVEL] * 57
 
 def addBackPorch():
-  global ntsc_signal
-  ntsc_signal += [BLANKING_LEVEL] * 13
-  l = len(ntsc_signal)
-  for x in range(l, l+31):
-    ntsc_signal += [BLANKING_LEVEL + 20 * math.sin(math.pi + RADIANS_PER_SAMPLE * x)]
-  ntsc_signal += [BLANKING_LEVEL] * 13
+    global ntsc_signal
+    ntsc_signal += [BLANKING_LEVEL] * 13
+    l = len(ntsc_signal)
+    for x in range(l, l+31):
+        ntsc_signal += [BLANKING_LEVEL + 20 * math.sin(math.pi + RADIANS_PER_SAMPLE * x)]
+    ntsc_signal += [BLANKING_LEVEL] * 13
 
 def addNonVisibleLine():
-  global ntsc_signal
-  ntsc_signal += SYNCH_PULSE
-  addBackPorch()
-  ntsc_signal += [BLANKING_LEVEL] * 658
+    global ntsc_signal
+    ntsc_signal += SYNCH_PULSE
+    addBackPorch()
+    ntsc_signal += [BLANKING_LEVEL] * 658
 
 def addFirstHalfFrame():
-  global ntsc_signal
-  ntsc_signal += SYNCH_PULSE
-  addBackPorch()
-  ntsc_signal += [BLACK_LEVEL] * 272
+    global ntsc_signal
+    ntsc_signal += SYNCH_PULSE
+    addBackPorch()
+    ntsc_signal += [BLACK_LEVEL] * 272
 
 def addSecondHalfFrame():
-  global ntsc_signal
-  ntsc_signal += SYNCH_PULSE
-  addBackPorch()
-  ntsc_signal += [BLANKING_LEVEL] * 272 + [BLACK_LEVEL] * 368 + FRONT_PORCH
+    global ntsc_signal
+    ntsc_signal += SYNCH_PULSE
+    addBackPorch()
+    ntsc_signal += [BLANKING_LEVEL] * 272 + [BLACK_LEVEL] * 368 + FRONT_PORCH
 
 def addPixel(p):
-  global ntsc_signal, BLACK_LEVEL, WHITE_LEVEL
-  Er = float(p[0]) / 255
-  Eg = float(p[1]) / 255
-  Eb = float(p[2]) / 255
+    global ntsc_signal, BLACK_LEVEL, WHITE_LEVEL
+    Er = float(p[0]) / 255
+    Eg = float(p[1]) / 255
+    Eb = float(p[2]) / 255
 
-  Ey = 0.30 * Er + 0.59 * Eg + 0.11 * Eb
-  Eq = 0.41 * (Eb - Ey) + 0.48 * (Er - Ey)
-  Ei = -0.27 * (Eb - Ey) + 0.74 * (Er - Ey)
+    Ey = 0.30 * Er + 0.59 * Eg + 0.11 * Eb
+    Eq = 0.41 * (Eb - Ey) + 0.48 * (Er - Ey)
+    Ei = -0.27 * (Eb - Ey) + 0.74 * (Er - Ey)
 
-  phase = RADIANS_PER_SAMPLE * len(ntsc_signal) + (33.0 / 180 * math.pi)
-  Em = Ey + Eq * math.sin(phase) + Ei * math.cos(phase)
+    phase = RADIANS_PER_SAMPLE * len(ntsc_signal) + (33.0 / 180 * math.pi)
+    Em = Ey + Eq * math.sin(phase) + Ei * math.cos(phase)
 
-  ntsc_signal += [BLACK_LEVEL + (WHITE_LEVEL - BLACK_LEVEL) * Em]
+    ntsc_signal += [BLACK_LEVEL + (WHITE_LEVEL - BLACK_LEVEL) * Em]
 
 ntsc_signal = []
 
 # Generate even field
 ntsc_signal += INTERVALS
 for x in range(13):
-  addNonVisibleLine()
+    addNonVisibleLine()
 for line in range(0,480,2):
-  ntsc_signal += SYNCH_PULSE
-  addBackPorch()
-  for x in range(line * 640, (line+1) * 640):
-    addPixel(pixels[x])
-  ntsc_signal += FRONT_PORCH
+    ntsc_signal += SYNCH_PULSE
+    addBackPorch()
+    for x in range(line * 640, (line+1) * 640):
+        addPixel(pixels[x])
+    ntsc_signal += FRONT_PORCH
 addFirstHalfFrame()
 
 # Generate odd field
 ntsc_signal += INTERVALS + EXTRA_HALF_LINE
 for x in range(12):
-  addNonVisibleLine()
+    addNonVisibleLine()
 addSecondHalfFrame()
 for line in range(1,481,2):
-  ntsc_signal += SYNCH_PULSE
-  addBackPorch()
-  for x in range(line * 640, (line+1) * 640):
-    addPixel(pixels[x])
-  ntsc_signal += FRONT_PORCH
+    ntsc_signal += SYNCH_PULSE
+    addBackPorch()
+    for x in range(line * 640, (line+1) * 640):
+        addPixel(pixels[x])
+    ntsc_signal += FRONT_PORCH
 
 ntsc_signal = [0.75 - (0.25/40) * x for x in ntsc_signal]
 
